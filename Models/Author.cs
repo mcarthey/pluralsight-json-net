@@ -12,5 +12,6 @@ namespace Json.Demo.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int CourseCount { get; set; }
+        public DateTime courseDate { get; set; }
     }
 }
