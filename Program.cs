@@ -109,7 +109,8 @@ namespace Json.Demo
             List<DateTime> deserializedDates = JsonConvert.DeserializeObject<List<DateTime>>(@"[
                                                                     '2017-04-27T16:00:00Z',
                                                                     '2017/04/27',
-                                                                    '2017/04/41'
+                                                                    '2017/04/41',
+                                                                    null
                                                                     ]", jSS);
             Console.WriteLine("Dates:");
             foreach (DateTime dateTime in deserializedDates)
@@ -129,7 +130,8 @@ namespace Json.Demo
             List<DateTime> deserializedDatesError = JsonConvert.DeserializeObject<List<DateTime>>(@"[
                                                                     '2017-04-27T16:00:00Z',
                                                                     '2017/04/27',
-                                                                    '2017/04/41'
+                                                                    '2017/04/41',
+                                                                    null
                                                                     ]");
 
         }
