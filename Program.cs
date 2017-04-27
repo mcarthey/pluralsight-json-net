@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Json.Demo.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Json.Demo
 {
@@ -43,7 +44,7 @@ namespace Json.Demo
             Console.WriteLine("Step 1: Create dynamic object and serialize");
             dynamic authorDynamic = new ExpandoObject();
             authorDynamic.Name = "Mark McArthey";
-            authorDynamic.Courses = new List<string> {"DIY", "Nutrition", "Programming"};
+            authorDynamic.Courses = new List<string> { "DIY", "Nutrition", "Programming" };
             string jsonDynamic = JsonConvert.SerializeObject(authorDynamic);
             Console.WriteLine(jsonDynamic);
             Console.WriteLine(Environment.NewLine);
@@ -56,7 +57,7 @@ namespace Json.Demo
             Console.WriteLine("***********");
             Console.WriteLine("** Dates **");
             Console.WriteLine("***********");
-            author.courseDate = new DateTime(2017,04,27,11,0,0).ToUniversalTime();
+            author.courseDate = new DateTime(2017, 04, 27, 11, 0, 0).ToUniversalTime();
             Console.WriteLine("Step 1: Do not specify any date format");
             var jsonDateDefault = JsonConvert.SerializeObject(author, Formatting.Indented);
             Console.WriteLine(jsonDateDefault);
@@ -88,6 +89,41 @@ namespace Json.Demo
             string jsonCustomDate = JsonConvert.SerializeObject(author, Formatting.Indented, settingsCustomDate);
             Console.WriteLine(jsonCustomDate);
             Console.WriteLine(Environment.NewLine);
+
+            Console.WriteLine("********************");
+            Console.WriteLine("** Error Handling **");
+            Console.WriteLine("********************");
+            List<string> errors = new List<string>();
+
+            JsonSerializerSettings jSS = new JsonSerializerSettings
+            {
+                Error = (sender, errorArgs) =>
+                {
+                    errors.Add(errorArgs.ErrorContext.Error.Message);
+                    errorArgs.ErrorContext.Handled = true;
+                },
+                Converters = { new IsoDateTimeConverter() }
+            };
+
+            Console.WriteLine("Step 1: Handle the error");
+            List<DateTime> deserializedDates = JsonConvert.DeserializeObject<List<DateTime>>(@"[
+                                                                    '2017-04-27T16:00:00Z',
+                                                                    '2017/04/27',
+                                                                    '2017/04/41'
+                                                                    ]", jSS);
+            Console.WriteLine("Dates:");
+            foreach (DateTime dateTime in deserializedDates)
+            {
+                Console.WriteLine(dateTime.ToShortDateString());
+            }
+            Console.WriteLine(Environment.NewLine);
+
+            Console.WriteLine("Step 2: Don't handle the error");
+            List<DateTime> deserializedDatesError = JsonConvert.DeserializeObject<List<DateTime>>(@"[
+                                                                    '2017-04-27T16:00:00Z',
+                                                                    '2017/04/27',
+                                                                    '2017/04/41'
+                                                                    ]");
 
         }
     }
