@@ -118,6 +118,13 @@ namespace Json.Demo
             }
             Console.WriteLine(Environment.NewLine);
 
+            Console.WriteLine("Errors:");
+            foreach (var err in errors)
+            {
+                Console.WriteLine(err);
+            }
+            Console.WriteLine(Environment.NewLine);
+
             Console.WriteLine("Step 2: Don't handle the error");
             List<DateTime> deserializedDatesError = JsonConvert.DeserializeObject<List<DateTime>>(@"[
                                                                     '2017-04-27T16:00:00Z',
